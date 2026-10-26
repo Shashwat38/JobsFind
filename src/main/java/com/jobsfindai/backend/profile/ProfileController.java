@@ -1,5 +1,6 @@
 package com.jobsfindai.backend.profile;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +14,7 @@ public class ProfileController {
     }
 
     @PostMapping("/api/profile")
-    public String createProfile(@RequestBody UserProfile profile){
+    public String createProfile(@Valid @RequestBody UserProfile profile){
         return profileService.generateMessage(profile);
     }
 }

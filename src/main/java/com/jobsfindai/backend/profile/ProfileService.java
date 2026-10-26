@@ -7,6 +7,6 @@ public class ProfileService {
 
 
     public String generateMessage(UserProfile userProfile){
-        return "Hello " + userProfile.getName() + ", you main skill is " + userProfile.getSkill();
+        return "Hello " + userProfile.name() + ", you main skill is " + userProfile.skill();
     }
 }
