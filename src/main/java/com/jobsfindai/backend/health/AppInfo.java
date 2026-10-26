@@ -1,0 +1,28 @@
+package com.jobsfindai.backend.health;
+
+public class AppInfo {
+    private String name;
+    private String version;
+    private String status;
+
+    public AppInfo(String name, String version, String status){
+        this.name = name;
+        this.version = version;
+        this.status = status;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public String getVersion(){
+        return version;
+    }
+
+    public String getStatus(){
+        return status;
+    }
+
+
+
+}
