@@ -1,14 +1,27 @@
 package com.jobsfindai.backend.resume;
 
+import com.jobsfindai.backend.ai.ClaudeAiService;
+import com.jobsfindai.backend.dto.ResumeProfile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import com.jobsfindai.backend.dto.ResumeProfile;
+
+import java.io.IOException;
 
 
 @Service
 public class ResumeService {
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+    private final PdfTextService pdfTextService;
+    private final ClaudeAiService claudeAiService;
+
+    public ResumeService(PdfTextService pdfTextService, ClaudeAiService claudeAiService){
+
+        this.pdfTextService = pdfTextService;
+        this.claudeAiService = claudeAiService;
+    }
 
 
     public void validateResume(MultipartFile file){
@@ -35,6 +48,13 @@ public class ResumeService {
                     "The uploaded file was not a pdf"
             );
         }
+
+    }
+
+    public ResumeProfile processResume(MultipartFile file) throws IOException {
+        validateResume(file);
+        String resumeText = pdfTextService.extractText(file);
+        return claudeAiService.analyzeResume(resumeText);
 
     }
 }
