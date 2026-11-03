@@ -2,6 +2,7 @@ package com.jobsfindai.backend.resume;
 
 import com.jobsfindai.backend.ai.ClaudeAiService;
 import com.jobsfindai.backend.ai.ClaudeResponseParser;
+import com.jobsfindai.backend.resume.ResumeRepository;
 import com.jobsfindai.backend.dto.ResumeProfile;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -9,19 +10,25 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.ObjectMapper;
 
+
 import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+
 public class ResumeServiceTest {
 
+    ResumeRepository resumeRepository = mock(ResumeRepository.class);
     ResumeService resumeService = new ResumeService(
             new PdfTextService(),
-            new ClaudeAiService("test-key", new ClaudeResponseParser(new ObjectMapper()))
-
+            new ClaudeAiService("test-key", new ClaudeResponseParser(new ObjectMapper())),
+            resumeRepository
     );
+
+
 
 
     @Test
@@ -34,6 +41,7 @@ public class ResumeServiceTest {
                 "".getBytes()
 
         );
+
 
         ResponseStatusException exception = assertThrows(
                 ResponseStatusException.class, () -> resumeService.validateResume(file)
@@ -63,7 +71,9 @@ public class ResumeServiceTest {
 
         ClaudeAiService claudeAiService = mock(ClaudeAiService.class);
 
-        ResumeService resumeService = new ResumeService(pdfTextService, claudeAiService);
+        ResumeRepository resumeRepository = mock(ResumeRepository.class);
+
+        ResumeService resumeService = new ResumeService(pdfTextService, claudeAiService, resumeRepository);
 
         MockMultipartFile file = new MockMultipartFile(
                 "file",

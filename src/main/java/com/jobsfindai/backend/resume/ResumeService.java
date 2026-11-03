@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.jobsfindai.backend.dto.ResumeProfile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Service
@@ -16,11 +17,13 @@ public class ResumeService {
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024;
     private final PdfTextService pdfTextService;
     private final ClaudeAiService claudeAiService;
+    private final ResumeRepository resumeRepository;
 
-    public ResumeService(PdfTextService pdfTextService, ClaudeAiService claudeAiService){
+    public ResumeService(PdfTextService pdfTextService, ClaudeAiService claudeAiService, ResumeRepository resumeRepository){
 
         this.pdfTextService = pdfTextService;
         this.claudeAiService = claudeAiService;
+        this.resumeRepository = resumeRepository;
     }
 
 
@@ -50,6 +53,14 @@ public class ResumeService {
         }
 
     }
+
+    public List<Resume> getResumesByUser(Long userId) {
+        return resumeRepository.findByUserId(userId);
+    }
+
+    public Resume saveResume(Resume resume) {
+        return resumeRepository.save(resume);
+    };
 
     public ResumeProfile processResume(MultipartFile file) throws IOException {
         validateResume(file);

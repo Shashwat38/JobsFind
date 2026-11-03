@@ -60,8 +60,6 @@ public class ClaudeAiService {
                 .retrieve()
                 .body(String.class);
 
-        System.out.println("Claude response:");
-        System.out.println(response);
 
         return claudeResponseParser.parseResponse(response);
 
