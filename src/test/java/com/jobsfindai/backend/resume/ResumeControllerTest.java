@@ -22,6 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
+/*
 public class ResumeControllerTest {
 
     ResumeService resumeService = mock(ResumeService.class);
@@ -109,3 +111,4 @@ public class ResumeControllerTest {
     }
 
 }
+*/

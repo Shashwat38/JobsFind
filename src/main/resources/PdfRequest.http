@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/resume/upload
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQyNzQ4NjksInN1YiI6IjExIiwiaWF0IjoxNzk0MjcxMjY5fQ.qwVCMhgRVhF7r-yJWS-ZPi5gygURL4QnAwKSLthaq5s
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="file"; filename="test-cv.pdf"
+Content-Type: application/pdf
+
+< ./test-cv.pdf
+--MyBoundary--

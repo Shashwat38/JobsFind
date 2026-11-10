@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/resumes
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQyNzA3ODYsInN1YiI6IjExIiwiaWF0IjoxNzk0MjY3MTg2fQ.7OR0GDO_M-jIr35gKgWbqbnhXBrBK8yZ03a3eY1Xkwc

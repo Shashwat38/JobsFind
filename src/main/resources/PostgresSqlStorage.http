@@ -1,0 +1,2 @@
+DELETE http://localhost:8080/api/resumes/17
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQyNzk2NjgsInN1YiI6IjExIiwiaWF0IjoxNzk0Mjc2MDY4fQ.hJj_rh_o_5f5bdgRlGF_DhE1zg0LKyIJNN05laVlbsc

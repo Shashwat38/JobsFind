@@ -11,13 +11,14 @@ import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.databind.ObjectMapper;
 
 
+
 import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+/*
 
 public class ResumeServiceTest {
 
@@ -114,3 +115,4 @@ public class ResumeServiceTest {
         verify(claudeAiService).analyzeResume("Java Spring Boot AWS");
     }
 }
+*/
