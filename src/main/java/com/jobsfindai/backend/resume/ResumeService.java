@@ -8,6 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import com.jobsfindai.backend.user.User;
 import com.jobsfindai.backend.user.UserRepository;
+import tools.jackson.databind.ObjectMapper;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -21,18 +24,24 @@ public class ResumeService {
     private final ResumeRepository resumeRepository;
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
+    private final ResumeAnalysisRepository resumeAnalysisRepository;
+    private final ObjectMapper objectMapper;
 
     public ResumeService(PdfTextService pdfTextService,
                          ClaudeAiService claudeAiService,
                          ResumeRepository resumeRepository,
                          UserRepository userRepository,
-                         FileStorageService fileStorageService){
+                         FileStorageService fileStorageService,
+                         ResumeAnalysisRepository resumeAnalysisRepository,
+                         ObjectMapper objectMapper){
 
         this.pdfTextService = pdfTextService;
         this.claudeAiService = claudeAiService;
         this.resumeRepository = resumeRepository;
         this.userRepository = userRepository;
         this.fileStorageService = fileStorageService;
+        this.resumeAnalysisRepository = resumeAnalysisRepository;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -67,7 +76,7 @@ public class ResumeService {
         return resumeRepository.findByUserId(userId);
     }
 
-
+    @Transactional(rollbackFor = IOException.class)
     public ResumeProfile processResume(MultipartFile file, Long userId) throws IOException {
         validateResume(file);
 
@@ -91,6 +100,12 @@ public class ResumeService {
             );
 
             resumeRepository.save(resume);
+
+            String profileJson = objectMapper.writeValueAsString(profile);
+
+            ResumeAnalysis analysis = new ResumeAnalysis(resume, profileJson);
+
+            resumeAnalysisRepository.save(analysis);
 
         } catch (RuntimeException exception) {
             fileStorageService.delete(storageKey);
@@ -132,5 +147,28 @@ public class ResumeService {
 
         resumeRepository.delete(resume);
     }
+
+
+    public String getResumeAnalysis(Long resumeId, Long userId) {
+
+        getResumeForUser(resumeId, userId);
+
+        ResumeAnalysis analysis = resumeAnalysisRepository
+                .findByResumeId(resumeId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Resume analysis not found"
+                ));
+
+        return analysis.getProfileJson();
+    }
+
+    public ResumeProfile getResumeProfile(Long resumeId, Long userId) {
+
+        String json = getResumeAnalysis(resumeId, userId);
+
+        return objectMapper.readValue(json, ResumeProfile.class);
+    }
+
 
 }

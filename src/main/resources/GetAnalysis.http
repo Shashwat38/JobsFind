@@ -1,0 +1,2 @@
+GET http://localhost:8080/api/resumes/18/analysis
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQ2MDE5MDEsInN1YiI6IjExIiwiaWF0IjoxNzk0NTk4MzAxfQ.JRhz1IDL0CrkqIIV_VDKJe5xNQp2szsDGLVMu-fv0Mg

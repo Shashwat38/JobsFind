@@ -106,5 +106,20 @@ public class ResumeController {
     }
 
 
+    @GetMapping(value = "/api/resumes/{id}/analysis",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getResumeAnalysis(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        Long userId = Long.parseLong(
+                Objects.requireNonNull(jwt.getSubject())
+        );
+
+        String analysis = resumeService.getResumeAnalysis(id, userId);
+
+        return ResponseEntity.ok(analysis);
+    }
+
 }
 

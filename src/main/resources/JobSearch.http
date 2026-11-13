@@ -1,0 +1,4 @@
+//GET http://localhost:8080/api/jobs/search?query=Java
+//GET http://localhost:8080/api/jobs/recommendations/18
+GET http://localhost:8080/api/jobs/recommendations/18?location=Stockholm
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQ2MDg1NDMsInN1YiI6IjExIiwiaWF0IjoxNzk0NjA0OTQzfQ.aRxZYdUtE3wzgR77e_M6GfJul80q-V--qy4g8yXJuN4
