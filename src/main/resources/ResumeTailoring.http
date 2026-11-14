@@ -1,0 +1,8 @@
+
+POST http://localhost:8080/api/resumes/18/tailor
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQ2NzExNjQsInN1YiI6IjExIiwiaWF0IjoxNzk0NjY3NTY0fQ.iFRo2JI9KjiZvwpXUVCFdRMwVhrKZBTC-nIDmqEnMoA
+Content-Type: application/json
+
+{
+  "jobId": "31542770"
+}

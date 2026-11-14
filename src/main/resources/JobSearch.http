@@ -1,4 +1,5 @@
 //GET http://localhost:8080/api/jobs/search?query=Java
 //GET http://localhost:8080/api/jobs/recommendations/18
-GET http://localhost:8080/api/jobs/recommendations/18?location=Stockholm
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQ2MDg1NDMsInN1YiI6IjExIiwiaWF0IjoxNzk0NjA0OTQzfQ.aRxZYdUtE3wzgR77e_M6GfJul80q-V--qy4g8yXJuN4
+//GET http://localhost:8080/api/jobs/recommendations/18?location=Stockholm
+POST http://localhost:8080/api/jobs/recommendations/18/refresh?location=Stockholm
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQ2MTk2NjgsInN1YiI6IjExIiwiaWF0IjoxNzk0NjE2MDY4fQ.GZJhWlTI3LiolSgtXOnXYTub01AtF0OtsR0M_of4hGE

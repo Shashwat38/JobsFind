@@ -1,9 +1,12 @@
+
 package com.jobsfindai.backend.ai;
 
 import com.jobsfindai.backend.dto.ResumeProfile;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import com.jobsfindai.backend.dto.TailoredResume;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +20,22 @@ public class ClaudeResponseParser {
         this.objectMapper = objectMapper;
     }
 
-    public ResumeProfile parseResponse(String response){
-
+    public ResumeProfile parseResponse(String response) {
 
         JsonNode root = objectMapper.readTree(response);
-
         JsonNode content = root.get("content");
 
         for (JsonNode block : content) {
 
-            if ("text".equals(block.get("type").asString())) {
+            if ("text".equals(block.path("type").asString())) {
 
-                String profileJson = block.get("text").asString();
+                String profileJson = block.path("text").asString();
+
+
+                String cleanedJson = cleanJson(profileJson);
 
                 return objectMapper.readValue(
-                        profileJson,
+                        cleanedJson,
                         ResumeProfile.class
                 );
             }
@@ -53,8 +57,11 @@ public class ClaudeResponseParser {
 
                 String rankingJson = block.path("text").asString();
 
+                // Remove Markdown code fences if Claude includes them
+                String cleanedJson = cleanJson(rankingJson);
+
                 JsonNode rankings = objectMapper
-                        .readTree(rankingJson)
+                        .readTree(cleanedJson)
                         .path("rankings");
 
                 if (!rankings.isArray()) {
@@ -89,6 +96,70 @@ public class ClaudeResponseParser {
 
         throw new IllegalStateException(
                 "Claude response does not contain job rankings"
+        );
+    }
+
+    private String cleanJson(String text) {
+
+        String cleaned = text.trim();
+
+        if (cleaned.startsWith("```")) {
+
+            int firstNewline = cleaned.indexOf('\n');
+
+            if (firstNewline != -1) {
+                cleaned = cleaned.substring(firstNewline + 1);
+            }
+
+            cleaned = cleaned.trim();
+
+            if (cleaned.endsWith("```")) {
+                cleaned = cleaned.substring(
+                        0,
+                        cleaned.length() - 3
+                ).trim();
+            }
+        }
+
+        return cleaned;
+    }
+
+
+
+    public TailoredResume parseTailoredResume(String response) {
+
+        if (response == null || response.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Claude response cannot be empty"
+            );
+        }
+
+        JsonNode root = objectMapper.readTree(response);
+        JsonNode content = root.path("content");
+
+        if (!content.isArray()) {
+            throw new IllegalStateException(
+                    "Claude response contains no content array"
+            );
+        }
+
+        for (JsonNode block : content) {
+
+            if ("text".equals(block.path("type").asString())) {
+
+                String resumeJson = block.path("text").asString();
+
+                String cleanedJson = cleanJson(resumeJson);
+
+                return objectMapper.readValue(
+                        cleanedJson,
+                        TailoredResume.class
+                );
+            }
+        }
+
+        throw new IllegalStateException(
+                "Claude response does not contain a tailored CV"
         );
     }
 

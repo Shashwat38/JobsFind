@@ -2,6 +2,7 @@ package com.jobsfindai.backend.resume;
 
 import com.jobsfindai.backend.ai.ClaudeAiService;
 import com.jobsfindai.backend.dto.ResumeProfile;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +34,7 @@ public class ResumeService {
                          UserRepository userRepository,
                          FileStorageService fileStorageService,
                          ResumeAnalysisRepository resumeAnalysisRepository,
-                         ObjectMapper objectMapper){
+                         ObjectMapper objectMapper) {
 
         this.pdfTextService = pdfTextService;
         this.claudeAiService = claudeAiService;
@@ -45,7 +46,7 @@ public class ResumeService {
     }
 
 
-    public void validateResume(MultipartFile file){
+    public void validateResume(MultipartFile file) {
 
         if (file.isEmpty()) {
             throw new ResponseStatusException(
@@ -54,7 +55,7 @@ public class ResumeService {
             );
         }
 
-        if (file.getSize() > MAX_FILE_SIZE){
+        if (file.getSize() > MAX_FILE_SIZE) {
             throw new ResponseStatusException(
                     HttpStatus.PAYLOAD_TOO_LARGE,
                     "File exceeds 5 MB"
@@ -63,7 +64,7 @@ public class ResumeService {
 
         String filename = file.getOriginalFilename();
 
-        if (filename == null || !filename.toLowerCase().endsWith(".pdf") || !"application/pdf".equals(file.getContentType())){
+        if (filename == null || !filename.toLowerCase().endsWith(".pdf") || !"application/pdf".equals(file.getContentType())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "The uploaded file was not a pdf"
@@ -168,6 +169,26 @@ public class ResumeService {
         String json = getResumeAnalysis(resumeId, userId);
 
         return objectMapper.readValue(json, ResumeProfile.class);
+    }
+
+
+    public String getResumeText(Long resumeId, Long userId)
+            throws IOException {
+
+        Resume resume = getResumeForUser(resumeId, userId);
+
+        Resource resource = fileStorageService.load(
+                resume.getStorageKey()
+        );
+
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Stored CV file not found"
+            );
+        }
+
+        return pdfTextService.extractText(resource);
     }
 
 
