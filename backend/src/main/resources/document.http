@@ -1,0 +1,34 @@
+
+POST http://localhost:8080/api/documents/word
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTQ2Nzk1MDgsInN1YiI6IjExIiwiaWF0IjoxNzk0Njc1OTA4fQ.C-BwWuRTXcXgQqnrnSldFiuvyauNt1ifSsUUpVe0N80
+Content-Type: application/json
+
+{
+  "name": "Alex Alexsson",
+  "email": "alex@example.com",
+  "phone": "0730000000",
+  "location": "Stockholm",
+  "education": [
+    {
+      "degree": "BSc in Computer Engineering",
+      "institution": "KTH",
+      "graduationDate": "Expected January 2028"
+    }
+  ],
+  "workExperience": [],
+  "projects": [
+    {
+      "name": "AI-Powered Job Match Website",
+      "bullets": [
+        "Developed REST APIs using Java and Spring Boot.",
+        "Integrated Claude API for CV analysis."
+      ]
+    }
+  ],
+  "technicalSkills": [
+    "Java",
+    "Spring Boot",
+    "PostgreSQL",
+    "React"
+  ]
+}

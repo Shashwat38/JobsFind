@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: jobsfindai-postgres
+
+    environment:
+      POSTGRES_DB: jobsfindai
+      POSTGRES_USER: jobsfindai
+      POSTGRES_PASSWORD: local_dev_password
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobsfindai -d jobsfindai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: jobsfind-backend:latest
+    container_name: jobsfind-backend
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/jobsfindai
+      DB_USERNAME: jobsfindai
+      DB_PASSWORD: local_dev_password
+      JWT_SECRET: ${JWT_SECRET}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+
+    volumes:
+      - ./uploads:/app/uploads
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: jobsfind-frontend:latest
+    container_name: jobsfind-frontend
+
+    ports:
+      - "3000:80"
+
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
